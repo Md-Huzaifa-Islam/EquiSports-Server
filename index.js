@@ -52,6 +52,65 @@ async function run() {
       res.send(result);
     });
 
+    // get all equipments
+    app.get("/equipments", async (req, res) => {
+      const cursor = equipments.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // get single equipments
+    app.get("/equipments/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await equipments.findOne(query);
+      res.send(result);
+    });
+    // add a equipments
+    app.post("/equipments", async (req, res) => {
+      const newEquipments = req.body;
+      const result = await equipments.insertOne(newEquipments);
+      res.send(result);
+    });
+    // get multiple for user email
+    app.get("/equipments/filtered/:email", async (req, res) => {
+      const userEmail = req.params.email;
+      const query = { owner: userEmail };
+      const cursor = equipments.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // delete a equipments
+    app.delete("/equipments/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await equipments.deleteOne(query);
+      res.send(result);
+    });
+
+    // put a equipment
+    app.put("/equipments/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedEquipment = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const equipment = {
+        $set: {
+          image: updatedEquipment.image,
+          itemName: updatedEquipment.itemName,
+          categoryName: updatedEquipment.categoryName,
+          description: updatedEquipment.description,
+          price: updatedEquipment.price,
+          rating: updatedEquipment.rating,
+          customization: updatedEquipment.customization,
+          processingTime: updatedEquipment.processingTime,
+          stockStatus: updatedEquipment.stockStatus,
+        },
+      };
+      const result = await equipment.updateOne(filter, equipment, options);
+      res.send(result);
+    });
+
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
