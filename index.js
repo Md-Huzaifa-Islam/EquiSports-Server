@@ -31,6 +31,7 @@ async function run() {
     const database = client.db("EquiSports");
     const users = database.collection("users");
     const equipments = database.collection("equipments");
+    const reviews = database.collection("reviews");
 
     // get all users
     app.get("/users", async (req, res) => {
@@ -88,7 +89,7 @@ async function run() {
       res.send(result);
     });
 
-    // put a equipment
+    // Update a equipment
     app.put("/equipments/:id", async (req, res) => {
       const id = req.params.id;
       const updatedEquipment = req.body;
@@ -107,7 +108,15 @@ async function run() {
           stockStatus: updatedEquipment.stockStatus,
         },
       };
-      const result = await equipment.updateOne(filter, equipment, options);
+      const result = await equipments.updateOne(filter, equipment, options);
+      res.send(result);
+    });
+
+    // reviews section
+    // get all reviews
+    app.get("/reviews", async (req, res) => {
+      const cursor = reviews.find();
+      const result = await cursor.toArray();
       res.send(result);
     });
 
