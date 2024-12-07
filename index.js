@@ -137,8 +137,8 @@ async function run() {
     // get multiple for user email
     app.get("/faqs/filtered/:email", async (req, res) => {
       const userEmail = req.params.email;
-      const query = { owner: userEmail };
-      const cursor = faqs.find(query);
+      const pointer = { owner: userEmail };
+      const cursor = faqs.find(pointer);
       const result = await cursor.toArray();
       res.send(result);
     });
