@@ -134,6 +134,21 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    // get multiple for user email
+    app.get("/faqs/filtered/:email", async (req, res) => {
+      const userEmail = req.params.email;
+      const query = { owner: userEmail };
+      const cursor = faqs.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // add a faq
+    app.post("/faqs", async (req, res) => {
+      const newFaq = req.body;
+      const result = await faqs.insertOne(newFaq);
+      res.send(result);
+    });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
