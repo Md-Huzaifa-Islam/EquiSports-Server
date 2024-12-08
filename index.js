@@ -48,10 +48,18 @@ async function run() {
       const result = await users.findOne(query);
       res.send(result);
     });
-    // add a user
-    app.post("/users", async (req, res) => {
+    // Update a equipment
+    app.put("/users", async (req, res) => {
       const newUser = req.body;
-      const result = await users.insertOne(newUser);
+      const filter = { email: newUser.email };
+      const options = { upsert: true };
+      const equipment = {
+        $set: {
+          username: newUser.username,
+          email: newUser.email,
+        },
+      };
+      const result = await users.updateOne(filter, equipment, options);
       res.send(result);
     });
 
