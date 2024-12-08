@@ -33,6 +33,7 @@ async function run() {
     const equipments = database.collection("equipments");
     const reviews = database.collection("reviews");
     const faqs = database.collection("faqs");
+    const category = database.collection("category");
 
     // get all users
     app.get("/users", async (req, res) => {
@@ -147,6 +148,13 @@ async function run() {
     app.post("/faqs", async (req, res) => {
       const newFaq = req.body;
       const result = await faqs.insertOne(newFaq);
+      res.send(result);
+    });
+
+    // get all category
+    app.get("/category", async (req, res) => {
+      const cursor = category.find();
+      const result = await cursor.toArray();
       res.send(result);
     });
 
